@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>AJAX Messaging Project UI 2018</title>
+	<link id="pagestyle" rel="stylesheet" type="text/css" href="finalStyle2.css">
+</head>
+<body>
+
+	<div id="controlPanel">
+		
+		<div id="checkMessagesToPanel">
+			<p class="panelTitle">Messages To Panel</p>
+			<form action="javascript:processLink();">
+				To: <input type="text" name="toUsername" id="toUsername"></input><br>
+				<input class="button" type="submit"></input>
+			</form>
+		</div>
+		
+		<div id="checkMessagesFromPanel">
+			<p class="panelTitle">Messages From Panel</p>
+			<form action="javascript:processLink2();">
+				From: <input type="text" name="fromUsername" id="fromUsername"></input><br>
+				<input class="button" type="submit"></input>
+			</form>
+		</div>
+		
+		<div id="newMessagePanel">
+			<p class="panelTitle">New Message Panel</p>
+			<form action="javascript:processLink3()">
+				From: <input type="text" name="messageFromUsername" id="messageFromUsername"></input><br>
+				To: <input type="text" name="messageToUsername" id="messageToUsername"></input><br>
+				Subject: <input type="text" name="messageSubjectName" id="messageSubjectName"></input><br>
+				Body:<br>
+				<textarea rows=6 cols=30 name="bodyText" id="bodyText"></textarea><br>
+				<input class="button" type="submit"></input>
+			</form>
+		</div>
+		
+		<div id="newUserPanel">
+			<p class="panelTitle">New User Panel</p>
+			<form action="javascript:processLink4();">
+				Username: <input type="text" name="newUsername" id="newUsername"></input><br>
+				Password: <input type="text" name="newPassword" id="newPassword"></input><br>
+				Email: <input type="text" name="newEmail" id="newEmail"></input><br>
+				First Name: <input type="text" name="newFirstName" id="newFirstName"></input><br>
+				Last Name: <input type="text" name="newLastName" id="newLastName"></input><br>
+				<input class="button" type="submit"></input>
+			</form>
+		</div>
+		<div>
+			<p class="panelTitle">Change Theme</p>
+			<button class=button2 onClick="toggleTheme('FPS')">FPS Theme</button>
+			<button class=button2 onClick="toggleTheme('exotic')">Exotic Theme</button>
+		</div>
+	</div>
+	
+	<div id="reportArea">
+		This div is where the content from your AJAX requests will show up.
+	</div>
+	
+	
+	
+	
+	
+	
+	
+<!-- LEFT BLANK ON PURPOSE...SCROLLING AID...OR SOMETHING -->	
+	
+	
+	<script>
+		function toggleTheme(theme){
+			if(theme == "FPS"){
+				document.getElementById("pagestyle").href = "finalStyle2.css";
+			}else if(theme == "exotic"){
+				document.getElementById("pagestyle").href = "finalStyle1.css";
+			}
+		}
+		
+		
+		/* 	It is ABSOLUTELY REQUIRED that you change the names of these methods
+			so that they don't have silly names...also, be sure to give all of your form
+			elements good names and unique IDs.
+		*/
+		
+		
+		
+		function processLink() { //Check Messages to someone
+			var url = "checkMessages2.php?";
+			var messageStuff = document.getElementById("toUsername").value;
+			url += "username=" + messageStuff;
+			httpGetAsync(url, showResults);
+		}
+	
+		function processLink2() { //Check Messages from someone/messages sent
+			var url = "checkMessagesFrom.php?";
+			var username = document.getElementById("fromUsername").value;
+			url += "username=" + username;
+			httpGetAsync(url, showResults);
+		}
+		
+		function processLink3() { //Create a new message
+			var url = "createAMessage.php?";
+			var fromUsername = document.getElementById("messageFromUsername").value;
+			var toUsername = document.getElementById("messageToUsername").value;
+			var subject = document.getElementById("messageSubjectName").value;
+			var body = document.getElementById("bodyText").value;
+			url += "to=" + toUsername + "&from=" + fromUsername + "&subject=" + subject + "&body=" + body;
+			httpGetAsync(url, showResults);
+		}
+		
+		function processLink4() { //Add new user
+			var url = "addNewUser.php?";
+			var username = document.getElementById("newUsername").value;
+			var password = document.getElementById("newPassword").value;
+			var email = document.getElementById("newEmail").value;
+			var firstName = document.getElementById("newFirstName").value;
+			var lastName = document.getElementById("newLastName").value;
+			url += "username=" + username + "&pass=" + password + "&email=" + email + "&firstname=" + firstName + "&lastname=" + lastName;
+			httpGetAsync(url, showResults);
+		}
+		
+		function processFirstForm() {
+			var url = "";
+			
+			url += "?customKeyName=";
+			url += document.getElementById("toUsername").value;
+			
+			httpGetAsync(url, showResults);
+		}
+		
+		function httpGetAsync(theUrl, callbackWhenPageLoaded) {	
+			var xmlHttp = new XMLHttpRequest();
+
+			xmlHttp.onreadystatechange = function() { 
+				if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+					callbackWhenPageLoaded(xmlHttp.responseText);
+			}
+			xmlHttp.open("GET", theUrl, true); 
+			xmlHttp.send(null);
+		}
+		
+		function showResults(responseText) {
+			document.getElementById("reportArea").innerHTML = responseText;
+		}
+	
+	</script>
+	
+</body>
+</html>
